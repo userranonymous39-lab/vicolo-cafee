@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navee's — Caffè &amp; Cucina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14100d;
+    --bg-2:#0f0c0a;
+    --surface:#1e1712;
+    --surface-2:#251c15;
+    --border:#372a20;
+    --copper:#c98a3e;
+    --copper-light:#e6b56e;
+    --olive:#8a9678;
+    --olive-dim:#5f6a51;
+    --cream:#f2e9dd;
+    --muted:#a5978450;
+    --muted-solid:#9c8f7e;
+    --danger:#c1554a;
+    --shadow: 0 20px 50px -20px rgba(0,0,0,0.6);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(201,138,62,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 0%, rgba(138,150,120,0.08), transparent 55%),
+      var(--bg);
+    color:var(--cream);
+    font-family:'Manrope', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--copper); color:#14100d; }
+  a{color:inherit;}
+  h1,h2,h3,h4{ font-family:'Fraunces', serif; font-weight:600; margin:0; letter-spacing:-0.01em;}
+  .mono{ font-family:'Space Mono', monospace; }
+  .app{ max-width:1180px; margin:0 auto; padding:0 24px 80px; }
+
+  /* ---------- NAV ---------- */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:blur(14px);
+    background:rgba(20,16,13,0.82);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-row{
+    max-width:1180px; margin:0 auto; padding:16px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; cursor:pointer; }
+  .brand .mark{ font-family:'Fraunces', serif; font-style:italic; font-weight:600; font-size:26px; color:var(--copper-light); }
+  .brand .sub{ font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted-solid); }
+  nav.tabs{ display:flex; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:100px; padding:4px; }
+  .tab-btn{
+    display:flex; align-items:center; gap:7px;
+    background:transparent; border:none; color:var(--muted-solid);
+    padding:9px 15px; border-radius:100px; cursor:pointer;
+    font-family:'Manrope',sans-serif; font-size:13.5px; font-weight:600;
+    transition:all .18s ease; position:relative;
+  }
+  .tab-btn svg{ width:16px; height:16px; stroke:currentColor; fill:none; transition:transform .18s ease; }
+  .tab-btn:hover{ color:var(--cream); }
+  .tab-btn.active{ background:var(--copper); color:#1a1208; }
+  .tab-btn:active svg{ transform:scale(0.82); }
+  .tab-btn .badge{
+    background:var(--danger); color:#fff; font-size:10px; font-weight:700;
+    min-width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    padding:0 3px; margin-left:-2px;
+  }
+
+  /* ---------- BANNER ---------- */
+  .banner{
+    margin:22px 0 6px; padding:14px 20px; border-radius:14px;
+    display:flex; align-items:center; gap:12px; justify-content:space-between; flex-wrap:wrap;
+    border:1px solid var(--border);
+  }
+  .banner.on{ background:linear-gradient(90deg, rgba(201,138,62,0.18), rgba(138,150,120,0.10)); border-color:rgba(201,138,62,0.4); }
+  .banner.off{ background:var(--surface); }
+  .banner .left{ display:flex; align-items:center; gap:10px; }
+  .banner .pill{
+    font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.06em;
+    background:var(--copper); color:#1a1208; padding:4px 10px; border-radius:100px; font-weight:700;
+  }
+  .banner p{ margin:0; font-size:13.5px; color:var(--cream); }
+  .banner.off p{ color:var(--muted-solid); }
+
+  /* ---------- SECTIONS / HEADINGS ---------- */
+  section.view{ padding-top:8px; }
+  .view-head{ margin:34px 0 18px; display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+  .view-head h2{ font-size:32px; }
+  .view-head p{ margin:6px 0 0; color:var(--muted-solid); font-size:14px; max-width:520px; }
+
+  .group-head{ display:flex; align-items:baseline; gap:12px; margin:36px 0 14px; }
+  .group-head h3{ font-size:19px; color:var(--copper-light); font-style:italic; }
+  .group-head .rule{ flex:1; height:1px; background:var(--border); }
+  .group-head .count{ font-family:'Space Mono',monospace; font-size:11px; color:var(--muted-solid); }
+
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(270px,1fr)); gap:14px; }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:18px; display:flex; flex-direction:column; gap:10px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .card:hover{ border-color:#4a3a2b; }
+  .card-top{ display:flex; justify-content:space-between; gap:10px; }
+  .card-top h4{ font-size:16.5px; }
+  .card .desc{ font-size:12.5px; color:var(--muted-solid); line-height:1.5; min-height:32px; }
+  .price-row{ display:flex; align-items:baseline; gap:8px; margin-top:auto; }
+  .price{ font-family:'Space Mono',monospace; font-size:16px; color:var(--cream); font-weight:700;}
+  .price.strike{ text-decoration:line-through; color:var(--muted-solid); font-size:13px; font-weight:400; }
+  .price-owner{ width:80px; background:var(--surface-2); border:1px solid var(--copper); color:var(--cream); font-family:'Space Mono',monospace; border-radius:8px; padding:5px 7px; font-size:13px; }
+
+  .btn{
+    border:none; border-radius:10px; padding:9px 14px; font-family:'Manrope',sans-serif;
+    font-weight:700; font-size:13px; cursor:pointer; transition:transform .12s ease, opacity .15s ease;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .btn:active{ transform:scale(0.95); }
+  .btn-primary{ background:var(--copper); color:#1a1208; }
+  .btn-primary:hover{ background:var(--copper-light); }
+  .btn-ghost{ background:transparent; border:1px solid var(--border); color:var(--cream); }
+  .btn-ghost:hover{ border-color:var(--copper); color:var(--copper-light); }
+  .btn-olive{ background:var(--olive); color:#12160e; }
+  .btn-block{ width:100%; }
+  .btn[disabled]{ opacity:.4; cursor:not-allowed; }
+
+  .customize-toggle{ font-size:12px; color:var(--olive); background:none; border:none; text-align:left; padding:0; cursor:pointer; font-weight:700; }
+  .customize-toggle:hover{ color:var(--copper-light); }
+  .custom-panel{ display:none; flex-direction:column; gap:10px; background:var(--surface-2); border-radius:10px; padding:12px; margin-top:2px; }
+  .custom-panel.open{ display:flex; }
+  .slider-row{ display:flex; flex-direction:column; gap:4px; }
+  .slider-row .lbl{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted-solid); }
+  .slider-row .lbl b{ color:var(--copper-light); font-weight:700; }
+  input[type=range]{ -webkit-appearance:none; width:100%; height:4px; border-radius:4px; background:var(--border); }
+  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:15px; height:15px; border-radius:50%; background:var(--copper); border:2px solid var(--bg); cursor:pointer; }
+  .qty-row{ display:flex; align-items:center; gap:8px; }
+  .qty-btn{ width:26px; height:26px; border-radius:7px; border:1px solid var(--border); background:var(--surface-2); color:var(--cream); cursor:pointer; font-weight:700;}
+  .qty-btn:active{ transform:scale(0.88); }
+  .qty-val{ font-family:'Space Mono',monospace; min-width:16px; text-align:center; }
+
+  /* ---------- CART / ORDER ---------- */
+  .cart-list{ display:flex; flex-direction:column; gap:10px; }
+  .cart-item{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px; display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+  .cart-item .meta{ font-size:11.5px; color:var(--muted-solid); margin-top:4px; }
+  .cart-item .rm{ background:none; border:none; color:var(--danger); cursor:pointer; font-size:12px; font-weight:700; }
+  .empty-note{ color:var(--muted-solid); font-size:13.5px; padding:30px 0; text-align:center; border:1px dashed var(--border); border-radius:14px; }
+  .totals{ margin-top:18px; border-top:1px solid var(--border); padding-top:14px; display:flex; flex-direction:column; gap:6px; font-size:13.5px; }
+  .totals .row{ display:flex; justify-content:space-between; color:var(--muted-solid); }
+  .totals .row.grand{ color:var(--cream); font-size:19px; font-family:'Space Mono',monospace; font-weight:700; padding-top:6px; }
+
+  /* order tracking */
+  .track-wrap{ display:flex; gap:34px; flex-wrap:wrap; align-items:center; justify-content:center; padding:30px 10px; }
+  .ring-box{ position:relative; width:210px; height:210px; }
+  .ring-box svg{ transform:rotate(-90deg); }
+  .ring-box .center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+  .ring-box .eta{ font-family:'Space Mono',monospace; font-size:30px; font-weight:700; color:var(--copper-light); }
+  .ring-box .eta-lbl{ font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted-solid); }
+  .status-steps{ display:flex; flex-direction:column; gap:14px; min-width:220px; }
+  .status-step{ display:flex; align-items:center; gap:12px; opacity:.35; transition:opacity .3s ease; }
+  .status-step.active{ opacity:1; }
+  .status-step .dot{ width:9px; height:9px; border-radius:50%; background:var(--border); flex-shrink:0; }
+  .status-step.active .dot{ background:var(--copper); box-shadow:0 0 0 4px rgba(201,138,62,0.2); }
+  .status-step .txt{ font-size:14px; }
+  .status-step .txt small{ display:block; font-size:11px; color:var(--muted-solid); }
+
+  /* ---------- FORMS (booking / account) ---------- */
+  .panel{ background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:26px; max-width:460px; }
+  .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+  .field label{ font-size:12px; color:var(--muted-solid); }
+  .field input, .field select{
+    background:var(--surface-2); border:1px solid var(--border); color:var(--cream);
+    border-radius:9px; padding:10px 12px; font-family:'Manrope',sans-serif; font-size:14px;
+  }
+  .field input:focus, .field select:focus{ outline:none; border-color:var(--copper); }
+  .form-row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .switch-row{ display:flex; gap:8px; margin-bottom:18px; background:var(--surface-2); padding:4px; border-radius:100px; }
+  .switch-row button{ flex:1; background:none; border:none; color:var(--muted-solid); padding:8px; border-radius:100px; font-weight:700; font-size:12.5px; cursor:pointer; }
+  .switch-row button.on{ background:var(--olive); color:#12160e; }
+
+  .booking-list{ display:flex; flex-direction:column; gap:10px; margin-top:26px; max-width:460px; }
+  .booking-card{ background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; font-size:13px; display:flex; justify-content:space-between; }
+  .booking-card b{ color:var(--copper-light); }
+
+  .welcome-card{ display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--border); padding:20px; border-radius:16px; max-width:460px; }
+  .avatar{ width:46px; height:46px; border-radius:50%; background:var(--copper); color:#1a1208; display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:700; font-size:19px; }
+
+  /* ---------- OWNER ---------- */
+  .lock-panel{ max-width:400px; }
+  .owner-row{ display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:8px; }
+  .owner-row .name{ font-size:13.5px; }
+  .owner-row .grp{ font-size:10.5px; color:var(--muted-solid); text-transform:uppercase; letter-spacing:.06em; }
+  .hint{ font-size:11.5px; color:var(--muted-solid); margin-top:8px; }
+
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--copper); color:#1a1208; padding:12px 20px; border-radius:100px;
+    font-weight:700; font-size:13.5px; opacity:0; pointer-events:none; transition:all .3s ease; z-index:100;
+    box-shadow:var(--shadow);
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  footer{ text-align:center; padding:50px 0 10px; color:var(--muted-solid); font-size:12px; }
+
+  @media (max-width:720px){
+    .nav-row{ flex-direction:column; align-items:flex-start; }
+    nav.tabs{ width:100%; overflow-x:auto; }
+    .tab-btn span{ display:none; }
+    .track-wrap{ flex-direction:column; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+/* ============ ICONS ============ */
+const ICONS = {
+  cup: `<path d="M3 8h13v6a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Z"/><path d="M16 9h2a3 3 0 0 1 0 6h-2"/><path d="M6 2c0 1.2 1 1.2 1 2.4S6 6 6 7.2"/><path d="M10 2c0 1.2 1 1.2 1 2.4S10 6 10 7.2"/>`,
+  bag: `<path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>`,
+  cal: `<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/>`,
+  user: `<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/>`,
+  gear: `<circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V20a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H4a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H10a1.7 1.7 0 0 0 1-1.6V4a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V10c.1.7.6 1.3 1.6 1.5H20a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.6 1Z" style="display:none"/>`,
+  bean: `<ellipse cx="12" cy="12" rx="8" ry="10" transform="rotate(20 12 12)"/><path d="M8 20c2-4 2-12 8-16"/>`,
+  plus: `<path d="M12 5v14M5 12h14"/>`,
+  minus: `<path d="M5 12h14"/>`,
+  x: `<path d="M6 6l12 12M18 6L6 18"/>`,
+  check: `<path d="M4 12l6 6L20 6"/>`,
+  lock: `<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>`,
+};
+function icon(name, cls){ return `<svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="${cls||''}">${ICONS[name]}</svg>`; }
+
+/* ============ DATA ============ */
+let COFFEE = [
+  {id:'esp', group:'Espresso & Black Coffee', coffee:true, name:'Espresso', desc:'A concentrated, bold shot forced through fine grounds.', price:3.50},
+  {id:'dop', group:'Espresso & Black Coffee', coffee:true, name:'Doppio', desc:'A double shot of espresso.', price:4.50},
+  {id:'ame', group:'Espresso & Black Coffee', coffee:true, name:'Americano', desc:'A shot of espresso diluted with hot water.', price:4.00},
+  {id:'lbk', group:'Espresso & Black Coffee', coffee:true, name:'Long Black', desc:'Espresso poured over hot water for a bolder cup.', price:4.00},
+  {id:'rye', group:'Espresso & Black Coffee', coffee:true, name:'Red Eye', desc:'Drip coffee with a shot of espresso added.', price:4.50},
+  {id:'lat', group:'Milk & Cream Coffees', coffee:true, name:'Latte', desc:'Espresso with steamed milk and a whisper of foam.', price:5.00},
+  {id:'cap', group:'Milk & Cream Coffees', coffee:true, name:'Cappuccino', desc:'Equal parts espresso, steamed milk and foam.', price:5.00},
+  {id:'fwh', group:'Milk & Cream Coffees', coffee:true, name:'Flat White', desc:'Espresso blended with velvety micro-foamed milk.', price:5.25},
+  {id:'mac', group:'Milk & Cream Coffees', coffee:true, name:'Macchiato', desc:'Espresso topped with a small mark of foam.', price:4.25},
+  {id:'cor', group:'Milk & Cream Coffees', coffee:true, name:'Cortado', desc:'Equal parts espresso and warm milk, low acidity.', price:4.75},
+  {id:'cal', group:'Milk & Cream Coffees', coffee:true, name:'Café au Lait', desc:'Drip coffee and steamed milk, no foam.', price:4.75},
+  {id:'moc', group:'Milk & Cream Coffees', coffee:true, name:'Mocha', desc:'Espresso, steamed milk and chocolate.', price:5.50},
+  {id:'cbr', group:'Cold & Iced Coffees', coffee:true, name:'Cold Brew', desc:'Steeped overnight in cold water — smooth, bold.', price:5.00},
+  {id:'aff', group:'Cold & Iced Coffees', coffee:true, name:'Affogato', desc:'A scoop of gelato drowned in hot espresso.', price:6.50},
+  {id:'fra', group:'Cold & Iced Coffees', coffee:true, name:'Frappuccino', desc:'Blended iced coffee, finished with cream.', price:6.00},
+];
+let COOKIES = [
+  {id:'ck1', group:'Cookies', name:'Amaretti', desc:'Almond cookie, crackled top, chewy center.', price:2.50},
+  {id:'ck2', group:'Cookies', name:'Biscotti', desc:'Twice-baked, crisp, built for dunking.', price:2.75},
+  {id:'ck3', group:'Cookies', name:'Pizzelle', desc:'Thin, lace-edged, faint vanilla and anise.', price:2.25},
+  {id:'ck4', group:'Cookies', name:'Hazelnut Chocolate Cookie', desc:'Toasted hazelnut with dark chocolate chunks.', price:3.00},
+  {id:'ck5', group:'Cookies', name:'Pistachio Shortbread', desc:'Buttery, ground pistachio, delicate crumb.', price:3.25},
+];
+let FOOD = [
+  {id:'f1', group:'Pasta', name:'Spaghetti Carbonara', desc:'Guanciale, egg, pecorino, black pepper.', price:16.00},
+  {id:'f2', group:'Pasta', name:'Bolognese Ragù', desc:'Slow-simmered beef ragù over tagliatelle.', price:17.00},
+  {id:'f3', group:'Pasta', name:'Cacio e Pepe', desc:'Pecorino romano and cracked pepper — nothing else.', price:15.00},
+  {id:'f4', group:'Pasta', name:'Ravioli', desc:'Hand-folded parcels, sage brown butter.', price:17.50},
+  {id:'f5', group:'Pasta', name:'Lasagna', desc:'Layered pasta, ragù and béchamel, baked to order.', price:18.00},
+  {id:'f6', group:'Pizza', name:'Neapolitan Pizza', desc:'San Marzano tomato, fior di latte, basil, charred crust.', price:15.00},
+  {id:'f7', group:'Pizza', name:'Roman-Style Pizza', desc:'Thin and crisp, cut into squares.', price:14.00},
+  {id:'f8', group:'Antipasti', name:'Bruschetta', desc:'Grilled bread, tomato, basil, olive oil.', price:8.00},
+  {id:'f9', group:'Antipasti', name:'Arancini', desc:'Fried risotto balls, molten center.', price:9.00},
+  {id:'f10', group:'Risotto', name:'Risotto', desc:'Creamy northern rice, slow-stirred.', price:16.50},
+  {id:'f11', group:'Mains', name:'Osso Buco', desc:'Braised veal shank, gremolata.', price:24.00},
+  {id:'f12', group:'Dessert', name:'Tiramisu', desc:'Espresso-soaked ladyfingers, mascarpone, cocoa.', price:8.00},
+];
+let SEAFOOD = [
+  {id:'s1', group:'Seafood — Finfish', name:'Salmon', desc:'Pan-seared, lemon butter.', price:22.00},
+  {id:'s2', group:'Seafood — Finfish', name:'Tuna', desc:'Seared rare, cracked pepper crust.', price:23.00},
+  {id:'s3', group:'Seafood — Crustaceans', name:'Lobster', desc:'Butter-poached.', price:32.00},
+  {id:'s4', group:'Seafood — Crustaceans', name:'Shrimp', desc:'Garlic and chili oil.', price:19.00},
+  {id:'s5', group:'Seafood — Mollusks', name:'Clams', desc:'White wine and garlic broth.', price:18.00},
+  {id:'s6', group:'Seafood — Mollusks', name:'Octopus', desc:'Char-grilled, salsa verde.', price:21.00},
+];
+const ALL_ITEMS = [...COFFEE, ...COOKIES, ...FOOD, ...SEAFOOD];
+const GROUP_ORDER = ['Espresso & Black Coffee','Milk & Cream Coffees','Cold & Iced Coffees','Cookies','Pasta','Pizza','Antipasti','Risotto','Mains','Dessert','Seafood — Finfish','Seafood — Crustaceans','Seafood — Mollusks'];
+const LEVELS = ['None','Light','Medium','Extra'];
+const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+/* ============ STATE ============ */
+let state = {
+  tab: 'menu',
+  cart: [],
+  user: null,
+  loginMode: 'new',
+  bookings: [],
+  ownerUnlocked: false,
+  temp: {},
+  order: null,
+};
+let orderTimerHandle = null;
+
+function isSpecialDay(){ const d = new Date().getDay(); return d === 1 || d === 4; }
+function nextSpecialDay(){
+  const d = new Date().getDay();
+  const targets = [1,4];
+  let diffs = targets.map(t => (t - d + 7) % 7 || 7);
+  return DAY_NAMES[targets[diffs.indexOf(Math.min(...diffs))]];
+}
+function priceFor(item){ return isSpecialDay() ? item.price * 0.9 : item.price; }
+function money(n){ return '$' + n.toFixed(2); }
+
+function getTemp(id){
+  if(!state.temp[id]) state.temp[id] = {open:false, sugar:1, milk:1, water:1, qty:1};
+  return state.temp[id];
+}
+
+/* ============ CART LOGIC ============ */
+function addCoffeeToCart(id){
+  const item = ALL_ITEMS.find(i=>i.id===id);
+  const t = getTemp(id);
+  state.cart.push({
+    key: Date.now()+Math.random(),
+    id, name:item.name, unitPrice: priceFor(item), qty:1,
+    sugar: LEVELS[t.sugar], milk: LEVELS[t.milk], water: LEVELS[t.water],
+  });
+  t.open = false;
+  showToast(item.name + ' added to your cup');
+  render();
+}
+function addSimpleToCart(id){
+  const item = ALL_ITEMS.find(i=>i.id===id);
+  const t = getTemp(id);
+  state.cart.push({ key: Date.now()+Math.random(), id, name:item.name, unitPrice: priceFor(item), qty: t.qty || 1 });
+  t.qty = 1;
+  showToast(item.name + ' added to your order');
+  render();
+}
+function removeFromCart(key){
+  state.cart = state.cart.filter(c => c.key !== key);
+  render();
+}
+function cartTotal(){ return state.cart.reduce((s,c)=> s + c.unitPrice * c.qty, 0); }
+function cartCount(){ return state.cart.reduce((s,c)=> s + c.qty, 0); }
+
+function placeOrder(){
+  if(state.cart.length === 0) return;
+  const totalSeconds = 60 * (6 + Math.floor(Math.random()*11)); // 6-16 min
+  state.order = {
+    items: [...state.cart],
+    total: cartTotal(),
+    totalSeconds, remaining: totalSeconds, status: 0,
+  };
+  state.cart = [];
+  state.tab = 'order';
+  render();
+  startOrderTimer();
+}
+function startOrderTimer(){
+  clearInterval(orderTimerHandle);
+  orderTimerHandle = setInterval(() => {
+    if(!state.order) { clearInterval(orderTimerHandle); return; }
+    state.order.remaining -= 1;
+    const pct = 1 - state.order.remaining / state.order.totalSeconds;
+    state.order.status = pct < 0.15 ? 0 : pct < 0.55 ? 1 : pct < 0.9 ? 2 : 3;
+    if(state.order.remaining <= 0){
+      state.order.remaining = 0;
+      state.order.status = 3;
+      clearInterval(orderTimerHandle);
+    }
+    renderOrderRingOnly();
+  }, 1000);
+}
+
+/* ============ TOAST ============ */
+let toastTimeout;
+function showToast(msg){
+  let el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(()=> el.classList.remove('show'), 2200);
+}
+
+/* ============ BOOKING ============ */
+function submitBooking(e){
+  e.preventDefault();
+  const f = e.target;
+  const booking = {
+    name: f.name.value, guests: f.guests.value, date: f.date.value, time: f.time.value,
+  };
+  if(!booking.name || !booking.date || !booking.time) return;
+  state.bookings.unshift(booking);
+  f.reset();
+  if(state.user) f.name.value = state.user.name;
+  showToast('Table reserved for ' + booking.name);
+  render();
+}
+
+/* ============ ACCOUNT ============ */
+function submitAccount(e){
+  e.preventDefault();
+  const f = e.target;
+  if(!f.name.value || !f.email.value) return;
+  state.user = { name: f.name.value, email: f.email.value, returning: state.loginMode === 'returning' };
+  showToast((state.loginMode === 'returning' ? 'Welcome back, ' : 'Welcome, ') + state.user.name.split(' ')[0]);
+  render();
+}
+function logout(){ state.user = null; render(); }
+
+/* ============ OWNER ============ */
+function unlockOwner(e){
+  e.preventDefault();
+  const val = e.target.code.value;
+  if(val === 'owner123'){ state.ownerUnlocked = true; render(); }
+  else showToast('Incorrect code');
+}
+function updatePrice(id, val){
+  const item = ALL_ITEMS.find(i=>i.id===id);
+  const n = parseFloat(val);
+  if(!isNaN(n) && n >= 0) item.price = n;
+  render();
+}
+
+/* ============ NAV ============ */
+function setTab(t){ state.tab = t; render(); window.scrollTo({top:0, behavior:'smooth'}); }
+
+/* ============ RENDER PIECES ============ */
+function renderBanner(){
+  const special = isSpecialDay();
+  const today = DAY_NAMES[new Date().getDay()];
+  return `<div class="banner ${special ? 'on':'off'}">
+    <div class="left">
+      <span class="pill">${special ? '10% OFF TODAY' : 'MON & THU'}</span>
+      <p>${special
+        ? `It's ${today} — every coffee, plate and bowl on the menu is 10% off.`
+        : `Special pricing runs Monday &amp; Thursday. Next one: <b style="color:var(--cream)">${nextSpecialDay()}</b>.`
+      }</p>
+    </div>
+  </div>`;
+}
+
+function renderPriceBlock(item){
+  if(state.ownerUnlocked){
+    return `<div class="price-row"><input class="price-owner mono" type="number" step="0.25" min="0" value="${item.price.toFixed(2)}"
+      onchange="updatePrice('${item.id}', this.value)"></div>`;
+  }
+  const special = isSpecialDay();
+  if(special){
+    return `<div class="price-row"><span class="price strike">${money(item.price)}</span><span class="price">${money(priceFor(item))}</span></div>`;
+  }
+  return `<div class="price-row"><span class="price">${money(item.price)}</span></div>`;
+}
+
+function renderCoffeeCard(item){
+  const t = getTemp(item.id);
+  return `<div class="card">
+    <div class="card-top"><h4>${item.name}</h4></div>
+    <div class="desc">${item.desc}</div>
+    ${renderPriceBlock(item)}
+    <button class="customize-toggle" onclick="toggleCustom('${item.id}')">${t.open ? 'Hide options ▲' : 'Customize sugar · milk · water ▾'}</button>
+    <div class="custom-panel ${t.open ? 'open':''}" id="panel-${item.id}">
+      ${['sugar','milk','water'].map(k => `
+        <div class="slider-row">
+          <div class="lbl"><span style="text-transform:capitalize">${k}</span><b>${LEVELS[t[k]]}</b></div>
+          <input type="range" min="0" max="3" value="${t[k]}" oninput="setCustom('${item.id}','${k}', this.value)">
+        </div>`).join('')}
+      <button class="btn btn-primary btn-block" onclick="addCoffeeToCart('${item.id}')">${icon('plus')} Add to cup</button>
+    </div>
+  </div>`;
+}
+function renderSimpleCard(item){
+  const t = getTemp(item.id);
+  return `<div class="card">
+    <div class="card-top"><h4>${item.name}</h4></div>
+    <div class="desc">${item.desc}</div>
+    ${renderPriceBlock(item)}
+    <div class="qty-row">
+      <button class="qty-btn" onclick="setQty('${item.id}', -1)">−</button>
+      <span class="qty-val">${t.qty}</span>
+      <button class="qty-btn" onclick="setQty('${item.id}', 1)">+</button>
+      <button class="btn btn-primary" style="margin-left:auto" onclick="addSimpleToCart('${item.id}')">${icon('plus')} Add</button>
+    </div>
+  </div>`;
+}
+function toggleCustom(id){ const t = getTemp(id); t.open = !t.open; render(); }
+function setCustom(id,key,val){ getTemp(id)[key] = parseInt(val); render(); }
+function setQty(id,delta){ const t = getTemp(id); t.qty = Math.max(1, (t.qty||1) + delta); render(); }
+
+function renderMenu(){
+  let html = `<div class="view-head">
+    <div><h2>The Menu</h2><p>Espresso classics, milk-forward pours, and a kitchen built around Roman and Neapolitan tradition.</p></div>
+  </div>`;
+  GROUP_ORDER.forEach(g => {
+    const items = ALL_ITEMS.filter(i => i.group === g);
+    if(items.length === 0) return;
+    html += `<div class="group-head"><h3>${g}</h3><div class="rule"></div><span class="count">${items.length} items</span></div>`;
+    html += `<div class="grid">${items.map(i => i.coffee ? renderCoffeeCard(i) : renderSimpleCard(i)).join('')}</div>`;
+  });
+  return html;
+}
+
+function renderOrderTab(){
+  if(state.order){
+    return renderTracking();
+  }
+  const items = state.cart;
+  let html = `<div class="view-head"><div><h2>Your Cup &amp; Plate</h2><p>Review your order, then send it to the kitchen.</p></div></div>`;
+  if(items.length === 0){
+    html += `<div class="empty-note">Nothing here yet — head to the Menu and add something.</div>`;
+  } else {
+    html += `<div class="cart-list">` + items.map(c => `
+      <div class="cart-item">
+        <div>
+          <div><b>${c.qty > 1 ? c.qty + '× ' : ''}${c.name}</b></div>
+          ${c.sugar ? `<div class="meta">Sugar: ${c.sugar} · Milk: ${c.milk} · Water: ${c.water}</div>` : ``}
+        </div>
+        <div style="text-align:right">
+          <div class="mono">${money(c.unitPrice * c.qty)}</div>
+          <button class="rm" onclick="removeFromCart(${c.key})">remove</button>
+        </div>
+      </div>`).join('') + `</div>`;
+    html += `<div class="totals">
+      <div class="row"><span>Items</span><span>${cartCount()}</span></div>
+      <div class="row grand"><span>Total</span><span>${money(cartTotal())}</span></div>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:16px; padding:13px;" onclick="placeOrder()">${icon('bean')} Send to the kitchen</button>`;
+  }
+  return html;
+}
+
+function ringSvg(pct, size){
+  const r = (size/2) - 10;
+  const c = 2 * Math.PI * r;
+  const offset = c * (1 - pct);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#33281f" stroke-width="9"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#c98a3e" stroke-width="9"
+      stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${offset}" id="ring-fg" style="transition:stroke-dashoffset 1s linear"/>
+  </svg>`;
+}
+const STEPS = [
+  {t:'Order received', s:'The kitchen has your ticket'},
+  {t:'Brewing & cooking', s:'Espresso pulling, pans on the fire'},
+  {t:'Plating up', s:'Final touches, on its way to the pass'},
+  {t:'Ready', s:'Come grab it — buon appetito'},
+];
+function renderTracking(){
+  const o = state.order;
+  const mins = Math.floor(o.remaining/60), secs = o.remaining%60;
+  const pct = 1 - o.remaining / o.totalSeconds;
+  return `<div class="view-head"><div><h2>Order Tracking</h2><p>${o.items.length} item${o.items.length>1?'s':''} · ${money(o.total)} total</p></div></div>
+  <div class="track-wrap">
+    <div class="ring-box">
+      ${ringSvg(pct, 210)}
+      <div class="center">
+        <div class="eta mono">${o.remaining>0 ? String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0') : 'DONE'}</div>
+        <div class="eta-lbl">${o.remaining>0 ? 'until ready' : 'enjoy your meal'}</div>
+      </div>
+    </div>
+    <div class="status-steps">
+      ${STEPS.map((s,i)=>`<div class="status-step ${o.status>=i?'active':''}"><div class="dot"></div><div class="txt">${s.t}<small>${s.s}</small></div></div>`).join('')}
+    </div>
+  </div>
+  <div style="text-align:center"><button class="btn btn-ghost" onclick="newOrder()">Start a new order</button></div>`;
+}
+function newOrder(){ state.order = null; clearInterval(orderTimerHandle); state.tab='menu'; render(); }
+function renderOrderRingOnly(){
+  if(state.tab !== 'order' || !state.order) return;
+  const o = state.order;
+  const mins = Math.floor(o.remaining/60), secs = o.remaining%60;
+  const etaEl = document.querySelector('.eta');
+  const lblEl = document.querySelector('.eta-lbl');
+  if(etaEl) etaEl.textContent = o.remaining>0 ? String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0') : 'DONE';
+  if(lblEl) lblEl.textContent = o.remaining>0 ? 'until ready' : 'enjoy your meal';
+  const ring = document.getElementById('ring-fg');
+  if(ring){
+    const r = ring.r.baseVal.value;
+    const c = 2*Math.PI*r;
+    const pct = 1 - o.remaining/o.totalSeconds;
+    ring.style.strokeDashoffset = c * (1-pct);
+  }
+  document.querySelectorAll('.status-step').forEach((el,i)=> el.classList.toggle('active', o.status>=i));
+}
+
+function renderBookingTab(){
+  const u = state.user;
+  return `<div class="view-head"><div><h2>Book a Table</h2><p>A few details and we'll hold your spot by the window.</p></div></div>
+  <form class="panel" onsubmit="submitBooking(event)">
+    <div class="field"><label>Name</label><input name="name" required value="${u?u.name:''}"></div>
+    <div class="form-row2">
+      <div class="field"><label>Date</label><input name="date" type="date" required></div>
+      <div class="field"><label>Time</label><input name="time" type="time" required></div>
+    </div>
+    <div class="field"><label>Guests</label>
+      <select name="guests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select>
+    </div>
+    <button class="btn btn-olive btn-block" type="submit">${icon('cal')} Reserve table</button>
+  </form>
+  ${state.bookings.length ? `<div class="booking-list">
+    <h4 style="font-size:14px;color:var(--muted-solid);margin-bottom:2px;">Upcoming reservations</h4>
+    ${state.bookings.map(b => `<div class="booking-card"><span>${b.name} · ${b.guests} guests</span><b>${b.date} — ${b.time}</b></div>`).join('')}
+  </div>` : ''}`;
+}
+
+function renderAccountTab(){
+  if(state.user){
+    return `<div class="view-head"><div><h2>Your Account</h2></div></div>
+    <div class="welcome-card">
+      <div class="avatar">${state.user.name.charAt(0).toUpperCase()}</div>
+      <div style="flex:1">
+        <div style="font-weight:700">${state.user.returning ? 'Welcome back' : 'Welcome'}, ${state.user.name}</div>
+        <div style="font-size:12.5px;color:var(--muted-solid)">${state.user.email}</div>
+      </div>
+      <button class="btn btn-ghost" onclick="logout()">Log out</button>
+    </div>`;
+  }
+  return `<div class="view-head"><div><h2>Account</h2><p>Register once, and your name follows you straight into a table booking.</p></div></div>
+  <div class="switch-row" style="max-width:460px;">
+    <button class="${state.loginMode==='new'?'on':''}" onclick="setLoginMode('new')">New here</button>
+    <button class="${state.loginMode==='returning'?'on':''}" onclick="setLoginMode('returning')">Already registered</button>
+  </div>
+  <form class="panel" onsubmit="submitAccount(event)">
+    <div class="field"><label>Name</label><input name="name" required placeholder="Your name"></div>
+    <div class="field"><label>Email</label><input name="email" type="email" required placeholder="you@email.com"></div>
+    <button class="btn btn-primary btn-block" type="submit">${icon('user')} ${state.loginMode==='returning' ? 'Log in' : 'Register'}</button>
+  </form>`;
+}
+function setLoginMode(m){ state.loginMode = m; render(); }
+
+function renderOwnerTab(){
+  if(!state.ownerUnlocked){
+    return `<div class="view-head"><div><h2>Owner Panel</h2><p>Enter the access code to edit menu prices live.</p></div></div>
+    <form class="panel lock-panel" onsubmit="unlockOwner(event)">
+      <div class="field"><label>Access code</label><input name="code" type="password" required></div>
+      <button class="btn btn-primary btn-block" type="submit">${icon('lock')} Unlock</button>
+      <div class="hint">Demo code: owner123</div>
+    </form>`;
+  }
+  let html = `<div class="view-head"><div><h2>Owner Panel</h2><p>Change any price — it updates across the menu instantly.</p></div>
+    <button class="btn btn-ghost" onclick="state.ownerUnlocked=false; render();">Lock panel</button></div>`;
+  GROUP_ORDER.forEach(g => {
+    const items = ALL_ITEMS.filter(i => i.group === g);
+    if(items.length === 0) return;
+    html += `<div class="group-head"><h3>${g}</h3><div class="rule"></div></div>`;
+    items.forEach(item => {
+      html += `<div class="owner-row">
+        <div><div class="name">${item.name}</div><div class="grp">${g}</div></div>
+        <input class="price-owner mono" type="number" step="0.25" min="0" value="${item.price.toFixed(2)}"
+          onchange="updatePrice('${item.id}', this.value)">
+      </div>`;
+    });
+  });
+  return html;
+}
+
+/* ============ MASTER RENDER ============ */
+function renderNav(){
+  const tabs = [
+    {id:'menu', label:'Menu', icon:'cup'},
+    {id:'order', label:'Order', icon:'bag', badge: cartCount() || (state.order ? '•' : 0)},
+    {id:'booking', label:'Book', icon:'cal'},
+    {id:'account', label:'Account', icon:'user'},
+    {id:'owner', label:'Owner', icon:'gear'},
+  ];
+  return `<header class="top">
+    <div class="nav-row">
+      <div class="brand" onclick="setTab('menu')"><span class="mark">Vicolo</span><span class="sub">Caffè &amp; Cucina</span></div>
+      <nav class="tabs">
+        ${tabs.map(t => `<button class="tab-btn ${state.tab===t.id?'active':''}" onclick="setTab('${t.id}')">
+          ${icon(t.icon)}<span>${t.label}</span>${t.badge ? `<span class="badge">${t.badge}</span>` : ''}
+        </button>`).join('')}
+      </nav>
+    </div>
+  </header>`;
+}
+
+function render(){
+  const root = document.getElementById('root');
+  let body = '';
+  if(state.tab === 'menu') body = renderMenu();
+  else if(state.tab === 'order') body = renderOrderTab();
+  else if(state.tab === 'booking') body = renderBookingTab();
+  else if(state.tab === 'account') body = renderAccountTab();
+  else if(state.tab === 'owner') body = renderOwnerTab();
+
+  root.innerHTML = `
+    ${renderNav()}
+    <div class="app">
+      ${state.tab === 'menu' ? renderBanner() : ''}
+      <section class="view">${body}</section>
+      <footer>Vicolo — down the alley, open late. Prices shown reflect today's offers automatically.</footer>
+    </div>
+    <div class="toast" id="toast"></div>
+  `;
+}
+render();
+</script>
+</body>
+</html>
